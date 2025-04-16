@@ -86,27 +86,6 @@ vaccinepct <- data.full %>% select(country, Q28) %>% drop_na() %>%
 
 countrymean <- mean(vaccinepct$pctyes)
 
-```
-
-# Page 1
-
-### Row - quick cards {height = "20%"}
-
-```{r}
-#| content: valuebox
-#| title: Average Country Vaccination Rate 
-
-list( value = paste(round(countrymean * 100, 2), "%"))
-
-```
-
-### Row - Vaccine Visualizations {height="" ="" "80%"=""}
-
-```{r}
-#| label: dot plot
-#| title: Belie vaccines are safe by country and global region
-#| message: false
-
 percents <- data.full %>% select(country, region, Q25) %>% 
   drop_na() %>%
   mutate(agree = ifelse(Q25 < 3, 1, 0)) %>% 
@@ -118,6 +97,75 @@ percents <- data.full %>% select(country, region, Q25) %>%
 medians <- percents %>%
   group_by(region)%>%
   summarise(medregion = median(pctagree))
+
+lowcountry <- percents[which(percents$pctagree == min(percents$pctagree)),]$country
+lowpercent <- percents[which(percents$pctagree == min(percents$pctagree)),]$pctagree
+
+highcountry <- percents[which(percents$pctagree == max(percents$pctagree)),]$country
+highpercent <- percents[which(percents$pctagree == max(percents$pctagree)),]$pctagree
+
+avgpercent <- mean(percents$pctagree)
+
+```
+
+# Page 1
+
+### Row - quick cards {.height ="" 25%=""}
+
+```{r}
+#| content: valuebox
+#| title: Average Country Vaccination Rate 
+#| color: success
+#| icon: bandaid
+
+list( value = paste(round(countrymean * 100, 2), "%"))
+
+```
+
+#### Column - tabset {.tabset}
+
+##### Average
+
+```{r}
+#| content: valuebox
+#| title: Average Country-Wide Belief in Safety of Vaccines
+#| color: light
+#| icon: globw
+
+list(value = paste(round(avgpercent*100,2), "%"))
+
+```
+
+##### Max
+
+```{r}
+#| content: valuebox
+#| title: Highest Belief in Safety of Vaccines
+#| color: success
+#| icon: emoji-smile
+
+list(value = paste(highcountry, ":" , round(highpercent * 100, 2), "%"))
+
+```
+
+##### Min
+
+```{r}
+#| content: valuebox
+#| title: Lowest Belief in Safety of Vaccines
+#| color: danger
+#| icon: emoji-frown
+
+list(value = paste(lowcountry, ":" , round(lowpercent * 100, 2), "%"))
+
+```
+
+### Row - Vaccine Visualizations {height="" ="" "80%"=""}
+
+```{r}
+#| label: dot plot
+#| title: Belief vaccines are safe by country and global region
+#| message: false
 
 
 
