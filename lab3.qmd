@@ -2,7 +2,7 @@
 title: "Lab 3 Dashboard"
 format: 
   dashboard: 
-    orientation: rows
+    orientation: columns
     nav-buttons: 
      - icon: github
        href:  https://github.com/lilypcook/lab-3
@@ -25,6 +25,7 @@ library(rnaturalearth)
 library(rnaturalearthdata)
 library(cowplot)
 library(RColorBrewer)
+library(kableExtra)
 ```
 
 ```{r}
@@ -110,33 +111,21 @@ avgpercent <- mean(percents$pctagree)
 
 # Page 1
 
-### Row - quick cards {.height ="" 25%=""}
+## Column - quick cards  {width = "25%"} {.tabset}
 
-```{r}
-#| content: valuebox
-#| title: Average Country Vaccination Rate 
-#| color: success
-#| icon: bandaid
-
-list( value = paste(round(countrymean * 100, 2), "%"))
-
-```
-
-#### Column - tabset {.tabset}
-
-##### Average
+### Avg
 
 ```{r}
 #| content: valuebox
 #| title: Average Country-Wide Belief in Safety of Vaccines
 #| color: light
-#| icon: globw
+#| icon: globe
 
 list(value = paste(round(avgpercent*100,2), "%"))
 
 ```
 
-##### Max
+### Max
 
 ```{r}
 #| content: valuebox
@@ -148,7 +137,7 @@ list(value = paste(highcountry, ":" , round(highpercent * 100, 2), "%"))
 
 ```
 
-##### Min
+### Min
 
 ```{r}
 #| content: valuebox
@@ -160,7 +149,9 @@ list(value = paste(lowcountry, ":" , round(lowpercent * 100, 2), "%"))
 
 ```
 
-### Row - Vaccine Visualizations {height="" ="" "80%"=""}
+## Column - Vaccine Visualizations {width = "75%"}  {.tabset}
+
+### Distribution
 
 ```{r}
 #| label: dot plot
@@ -200,9 +191,39 @@ percents %>%
 
 ```
 
+### Medians
+
 ```{r}
-#| label: vaccination map
-#| title: People who say their children have been vaccinated
+#| label: medians
+#| title: Belief vaccines are safe by country and global region
+#| message: false
+
+medians %>%
+  mutate(Percent = paste(round(medregion * 100, 2),"%"),
+         Region = region) %>%
+  select(Region, Percent) %>%
+  kable()
+
+```
+
+# Page 2
+
+## row 1 {width = "20%"}
+
+```{r}
+#| content: valuebox
+#| title: Average Country Vaccination Rate 
+#| color: success
+#| icon: bandaid
+
+list( value = paste(round(countrymean * 100, 2), "%"))
+
+```
+
+## row 2 {width = "80%"}
+
+```{r}
+#| title: People who say their children have been vaccinated}
 #| message: false
 
 mapdata <-  ne_countries(scale = "medium", returnclass = "sf")
@@ -262,5 +283,3 @@ leaflet(mergedmap) %>%
 
 
 ```
-
-# Page 2
