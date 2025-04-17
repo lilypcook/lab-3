@@ -2,6 +2,7 @@
 title: "Lab 3 Dashboard"
 format: 
   dashboard: 
+    theme: cosmo
     orientation: columns
     nav-buttons: 
      - icon: github
@@ -105,13 +106,15 @@ lowpercent <- percents[which(percents$pctagree == min(percents$pctagree)),]$pcta
 highcountry <- percents[which(percents$pctagree == max(percents$pctagree)),]$country
 highpercent <- percents[which(percents$pctagree == max(percents$pctagree)),]$pctagree
 
+USApercent <- percents[which(percents$country == "United States"),]$pctagree
+
 avgpercent <- mean(percents$pctagree)
 
 ```
 
 # Page 1
 
-## Column - quick cards  {width = "25%"} {.tabset}
+## Row - quick cards {width=32%} 
 
 ### Avg
 
@@ -129,11 +132,11 @@ list(value = paste(round(avgpercent*100,2), "%"))
 
 ```{r}
 #| content: valuebox
-#| title: Highest Belief in Safety of Vaccines
+#| title: Belief in Safety of Vaccines in United States
 #| color: success
 #| icon: emoji-smile
 
-list(value = paste(highcountry, ":" , round(highpercent * 100, 2), "%"))
+list(value = paste(round(USApercent * 100, 2), "%"))
 
 ```
 
@@ -149,13 +152,12 @@ list(value = paste(lowcountry, ":" , round(lowpercent * 100, 2), "%"))
 
 ```
 
-## Column - Vaccine Visualizations {width = "75%"}  {.tabset}
+## Row - Vaccine Visualizations {.tabset width=68%} 
 
 ### Distribution
 
 ```{r}
 #| label: dot plot
-#| title: Belief vaccines are safe by country and global region
 #| message: false
 
 
@@ -195,7 +197,7 @@ percents %>%
 
 ```{r}
 #| label: medians
-#| title: Belief vaccines are safe by country and global region
+#| title: Median Country-Wide Belief in Vaccine Safety by Region
 #| message: false
 
 medians %>%
