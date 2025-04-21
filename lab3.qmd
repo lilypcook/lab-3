@@ -1,5 +1,5 @@
 ---
-title: "Lab 3 Dashboard"
+title: "Lab 3 Dashboard - Lily Cook"
 format: 
   dashboard: 
     theme: minty
