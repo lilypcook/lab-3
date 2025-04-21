@@ -2,7 +2,7 @@
 title: "Lab 3 Dashboard"
 format: 
   dashboard: 
-    theme: cosmo
+    theme: minty
     orientation: columns
     nav-buttons: 
      - icon: github
@@ -86,7 +86,9 @@ vaccinepct <- data.full %>% select(country, Q28) %>% drop_na() %>%
     pctyes >= 0.95 ~ 5
   ))
 
+
 countrymean <- mean(vaccinepct$pctyes)
+
 
 percents <- data.full %>% select(country, region, Q25) %>% 
   drop_na() %>%
@@ -110,9 +112,18 @@ USApercent <- percents[which(percents$country == "United States"),]$pctagree
 
 avgpercent <- mean(percents$pctagree)
 
+lowvaxcountry <- vaccinepct[which(vaccinepct$pctyes == min(vaccinepct$pctyes )),]$country
+lowvax <- vaccinepct[which(vaccinepct$pctyes == min(vaccinepct$pctyes )),]$pctyes
+
+highvaxcountry <- vaccinepct[which(vaccinepct$pctyes == max(vaccinepct$pctyes )),]$country
+highvax <- vaccinepct[which(vaccinepct$pctyes == max(vaccinepct$pctyes )),]$pctyes
+
+USAvax <- vaccinepct[which(vaccinepct$country == "United States"),]$pctyes
+
+
 ```
 
-# Page 1
+# Belief in Vaccines
 
 ## Row - quick cards {width=32%} 
 
@@ -121,7 +132,7 @@ avgpercent <- mean(percents$pctagree)
 ```{r}
 #| content: valuebox
 #| title: Average Country-Wide Belief in Safety of Vaccines
-#| color: light
+#| color: info
 #| icon: globe
 
 list(value = paste(round(avgpercent*100,2), "%"))
@@ -133,8 +144,8 @@ list(value = paste(round(avgpercent*100,2), "%"))
 ```{r}
 #| content: valuebox
 #| title: Belief in Safety of Vaccines in United States
-#| color: success
-#| icon: emoji-smile
+#| color: secondary
+#| icon: bandaid-fill
 
 list(value = paste(round(USApercent * 100, 2), "%"))
 
@@ -199,6 +210,7 @@ percents %>%
 #| label: medians
 #| title: Median Country-Wide Belief in Vaccine Safety by Region
 #| message: false
+#| color: secondary
 
 medians %>%
   mutate(Percent = paste(round(medregion * 100, 2),"%"),
@@ -208,24 +220,12 @@ medians %>%
 
 ```
 
-# Page 2
+# Vaccination Rates
 
-## row 1 {width = "20%"}
-
-```{r}
-#| content: valuebox
-#| title: Average Country Vaccination Rate 
-#| color: success
-#| icon: bandaid
-
-list( value = paste(round(countrymean * 100, 2), "%"))
-
-```
-
-## row 2 {width = "80%"}
+## col 1 {width=70%}
 
 ```{r}
-#| title: People who say their children have been vaccinated}
+#| title: People who say their children have been vaccinated
 #| message: false
 
 mapdata <-  ne_countries(scale = "medium", returnclass = "sf")
@@ -283,5 +283,58 @@ leaflet(mergedmap) %>%
   )
   
 
+
+```
+
+
+
+## col 2 {width=30%}
+
+### row 1 {height=33%}
+
+```{r}
+#| content: valuebox
+#| title: Average Country Vaccination Rate 
+#| color: success
+#| icon: bandaid
+
+list( value = paste(round(countrymean * 100, 2), "%"))
+
+```
+
+### row {.tabset height=67%}
+
+#### Low
+
+```{r}
+#| content: valuebox
+#| title: Lowest Vaccination Rate
+#| color: info
+#| icon: clipboard-data
+
+list( value = paste(lowvaxcountry, ":", round(lowvax * 100, 2), "%"))
+
+```
+
+#### High
+
+```{r}
+#| content: valuebox
+#| title: Highest Vaccination Rate 
+#| color: warning
+
+list( value = paste("N. Cyprus:", round(highvax * 100, 2), "%"))
+
+```
+
+#### USA
+
+```{r}
+#| content: valuebox
+#| title: US Vaccination Rate 
+#| color: secondary
+#| icon: capsule-pill 
+
+list( value = paste("USA:", round(USAvax * 100, 2), "%"))
 
 ```
